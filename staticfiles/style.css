@@ -1,0 +1,76 @@
+*{
+    box-sizing: border-box;
+    /* Resentando css padrao */
+    margin: 0;
+    display: 0;
+}
+.container-fluid{
+    margin-top: 25px;
+}
+
+/* Filtro por quantidade de times e pesquisa */
+.filter-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+span .form-select{
+    width: 55px;
+    height: 30px;
+    color: grey;
+    margin:0 0.5rem;
+}
+.input-group-sm{
+    display: flex;
+}
+
+/* Conteudo tabelas de times */
+.table_container{
+    border: solid 1px black;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.cabeçalho-content{
+    background-color: grey;
+}
+.row .col{
+    border-right: 1px solid black;
+    align-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.row .col:last-child{
+    border-right: 0px;
+}
+.row-content{
+    border: 1px solid black;
+}
+.row-content div{
+    height: 40px;
+}
+.row-content:nth-child(even){
+    background-color: rgb(179, 179, 179);
+}
+
+/* Descrição da pagina e paginação */
+
+.pagination-container{
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Estilização modal */
+.btn-times{
+    pointer-events: none;
+    color: grey;
+}
+
+.add_or_delete{
+    background-color: transparent;
+    border: none !important;
+    cursor: pointer;
+}
+.add_or_delete:focus{
+    outline:0;
+}
