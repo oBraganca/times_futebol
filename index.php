@@ -4,17 +4,8 @@ require_once 'vendor/autoload.php';
 use App\Crud\read;
 
 
-if(isset($_POST['_filterObj'])){
-    $filterObj = $_POST['_filterObj'];
-}else{
-    $filterObj = 10;
-}
-
-if(isset($_POST['offset'])){
-    $offset = $_POST['offset'];
-}else{
-    $offset = 1;
-}
+$filterObj = 10;
+$offset = 1;
 
 $query = new read();
 
@@ -78,10 +69,10 @@ include __DIR__.'/inc/header.php';
                 }else{?>
                 <div class="container table_container">
                 <div class="row cabeçalho-content">
-                    <div class="col">Time de futebol</div>
+                    <div class="col" id='invert_seq'>Time de futebol <button class='add_or_delete'id="invert"value="ASC"><i class="bi bi-caret-up-fill"></i><i class="bi bi-caret-down-fill"></i></button> </div>
                     <div class="col">Estado</div>
                     <div class="col">UF</div>
-                    <div class="col"><button type="button" data-toggle="modal" class='add_or_delete' data-target="#exampleModal" data-whatever="Nome do time"><i style="color: rgb(50, 205, 115);" class="fas fa-plus"></i></button></div>
+                    <div class="col"><button type="button" data-toggle="modal" class='add_or_delete' data-target="#exampleModal" data-whatever="Nome do time"><i style="color: #5aea5a;" class="fas fa-plus"></i></button></div>
                 </div>
                 <?php
                     for($i = 0; $i < $limit; $i++){  
@@ -103,7 +94,7 @@ include __DIR__.'/inc/header.php';
                     <li class="page-item  <?php if($i == 1){echo 'active';}?>"><a class="page-link link_option" href="<?php echo $i ?>"><?php echo $i ?></a></li>
                     <?php
                     }?>
-                    <li class="page-item"><a class="page-link" href="#">Próximo</a></li>
+                    <li class="page-item"><a class="page-link" href="2">Próximo</a></li>
                 </ul>
             </div> 
             <?php

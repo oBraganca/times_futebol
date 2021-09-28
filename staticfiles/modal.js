@@ -5,11 +5,13 @@ $(document).ready(function () {
 
     $('#form1').on('submit',function(e) {
         e.preventDefault();
+        filter_table = $('select[id=filter_table] option').filter(':selected').val()
+        desc_or_asc =$('#invert').val()
         pesq = $('#pesquisa').val()
         $.ajax({
             url: 'inc/filter.php',
             type: "POST",
-            data: {'search':pesq},
+            data: {'search':pesq, 'desc_or_asc': desc_or_asc,'filterObj':filter_table},
             datType:'JSON',
             beforeSend: function(){
             },
@@ -20,13 +22,13 @@ $(document).ready(function () {
     });
     filter_table = $('select[id=filter_table] option').filter(':selected').val()
     $('#filter_table').on('change', function () {
-        console.log('a')
+        desc_or_asc =$('#invert').val()
         pesq = $('#pesquisa').val()
         _filterObj = this.value
         $.ajax({
             url: 'inc/filter.php',
             type: "POST",
-            data: {'filterObj':_filterObj, 'search':pesq},
+            data: {'filterObj':_filterObj, 'search':pesq, 'desc_or_asc': desc_or_asc},
             datType:'JSON',
             success: function(res){
                 $('.filter_data').html(res)
@@ -56,6 +58,7 @@ $(document).ready(function () {
     estado.on('change', function () {
         if(estado.val() == $("#estado option:first").val()){
             bool_button = false
+            $('button[name=success]').addClass('btn-times btn-light')
         }else{
             if(time.val()){
                 bool_button = true
@@ -73,12 +76,14 @@ $(document).ready(function () {
 
     $('#add_fut').on('submit',function(e) {
         e.preventDefault();
+        filter_table = $('select[id=filter_table] option').filter(':selected').val()
+        desc_or_asc =$('#invert').val()
         pesq = $('#pesquisa').val()
         if(bool_button){
             $.ajax({
                 url: 'inc/filter.php',
                 type: "POST",
-                data: {'time':time.val(),'estado':estado.val(), 'search':pesq},
+                data: {'time':time.val(),'estado':estado.val(), 'search':pesq, 'desc_or_asc': desc_or_asc, 'filterObj':filter_table},
                 datType:'JSON',
                 beforeSend: function(){
                     $('#exampleModal').modal({hide:true});
@@ -88,6 +93,7 @@ $(document).ready(function () {
                     $('#exampleModal').modal('hide')
                     $('#add_fut').trigger('reset')
                     sucesso()
+                    $('button[name=success]').addClass('btn-times btn-light')
                     
                 }
             })

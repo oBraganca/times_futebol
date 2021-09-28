@@ -4,7 +4,7 @@
     
     use App\Crud\Create;
     use App\Crud\Delete;
-    
+    use App\Crud\Read;
 
     if (!empty($_POST['time']) && !empty($_POST['time'])) {
         $create = new Create();
@@ -18,18 +18,11 @@
         $ex_time = new Delete();
         $ex_time->delete('tbtimefutebol', 'WHERE tbtimefutebol.id ='.$id);
     }
-
-    use App\Crud\Read;
-    
-    $query = new Read();
     
     if(isset($_POST['filterObj'])){
         $filterObj = $_POST['filterObj'];
     }else{
-        if(!isset($filterObj)){
-            $filterObj = 10;
-        }
-        
+        $filterObj = 10;
     }
 
     if(isset($_POST['pagination'])){
@@ -46,16 +39,26 @@
         
         $total = count($search -> read("tbtimefutebol","tbtimefutebol.id, tbtimefutebol.time, tbestado.nome, tbestado.UF", "tbtimefutebol INNER JOIN tbestado ON tbtimefutebol.idtbestado = tbestado.id WHERE tbtimefutebol.time LIKE '%{$pesquisar}%'"));
 
-        $oa = $search -> read("tbtimefutebol","tbtimefutebol.id, tbtimefutebol.time, tbestado.nome, tbestado.UF", "tbtimefutebol INNER JOIN tbestado ON tbtimefutebol.idtbestado = tbestado.id WHERE tbtimefutebol.time LIKE '%{$pesquisar}%' LIMIT {$filterObj} OFFSET {$offset}");
+        if(!empty($_POST['desc_or_asc'])){
+            $order = $_POST['desc_or_asc'];
+            $oa = $search -> read("tbtimefutebol","tbtimefutebol.id, tbtimefutebol.time, tbestado.nome, tbestado.UF", "tbtimefutebol INNER JOIN tbestado ON tbtimefutebol.idtbestado = tbestado.id WHERE tbtimefutebol.time LIKE '%{$pesquisar}%' ORDER BY tbtimefutebol.id {$order} LIMIT {$filterObj} OFFSET {$offset} ");
+        }else{
+            $oa = $search -> read("tbtimefutebol","tbtimefutebol.id, tbtimefutebol.time, tbestado.nome, tbestado.UF", "tbtimefutebol INNER JOIN tbestado ON tbtimefutebol.idtbestado = tbestado.id WHERE tbtimefutebol.time LIKE '%{$pesquisar}%' LIMIT {$filterObj} OFFSET {$offset}");
+        }
     }else{
+        $query = new Read();
+
         // Aqui vamos usar o count para pegar todos os registros de times. usando na paginação
         $total = count($query -> read("tbtimefutebol","tbtimefutebol.id, tbtimefutebol.time, tbestado.nome, tbestado.UF", "tbtimefutebol INNER JOIN tbestado ON tbtimefutebol.idtbestado = tbestado.id "));
 
-        // Query para usar na tabela. Limite inicial de 10 (Padrao). 
-        $oa = $query -> read("tbtimefutebol","tbtimefutebol.id, tbtimefutebol.time,  tbestado.nome, tbestado.UF", "tbtimefutebol INNER JOIN tbestado ON tbtimefutebol.idtbestado = tbestado.id LIMIT {$filterObj} OFFSET {$offset}");
-        
-
-        
+        if(!empty($_POST['desc_or_asc'])){
+            $order = $_POST['desc_or_asc'];
+            
+            $oa = $query -> read("tbtimefutebol","tbtimefutebol.id, tbtimefutebol.time,  tbestado.nome, tbestado.UF", "tbtimefutebol INNER JOIN tbestado ON tbtimefutebol.idtbestado = tbestado.id ORDER BY tbtimefutebol.id {$order} LIMIT {$filterObj} OFFSET {$offset} ");
+        }else{
+            // Query para usar na tabela. Limite inicial de 10 (Padrao). 
+            $oa = $query -> read("tbtimefutebol","tbtimefutebol.id, tbtimefutebol.time,  tbestado.nome, tbestado.UF", "tbtimefutebol INNER JOIN tbestado ON tbtimefutebol.idtbestado = tbestado.id LIMIT {$filterObj} OFFSET {$offset}");
+        }
     }
     
     $limit = count($oa);
@@ -63,7 +66,7 @@
 ?>
 <div class="container table_container">
     <div class="row cabeçalho-content">
-        <div class="col">Time de futebol</div>
+        <div class="col" id='invert_seq'>Time de futebol <button id="invert"class='add_or_delete' value="<?php echo $order; ?>"><?php if($order == 'ASC'){echo '<i class="bi bi-caret-down-fill"></i>';}else{echo '<i class="bi bi-caret-up-fill"></i>';}?></button></div>
         <div class="col">Estado</div>
         <div class="col">UF</div>
         <div class="col"><button type="button" data-toggle="modal" class='add_or_delete' data-target="#exampleModal" data-whatever="Nome do time"><i style="color: rgb(50, 205, 115);" class="fas fa-plus"></i></button></div><?php include __DIR__.'/add_times.php' ?>

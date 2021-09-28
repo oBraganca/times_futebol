@@ -31,7 +31,8 @@ span .form-select{
     margin-bottom: 20px;
 }
 .cabeçalho-content{
-    background-color: grey;
+    background-color: rgb(179, 179, 179);;
+    
 }
 .row .col{
     border-right: 1px solid black;
@@ -50,7 +51,7 @@ span .form-select{
     height: 40px;
 }
 .row-content:nth-child(even){
-    background-color: rgb(179, 179, 179);
+    background-color: rgb(241 241 241);
 }
 
 /* Descrição da pagina e paginação */
