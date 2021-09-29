@@ -9,6 +9,7 @@ use App\Db\Conn;
 class Delete
 {
 
+    /* Atributos privada */
     private $table;
     private $terms;
     private $result;
@@ -17,13 +18,14 @@ class Delete
 
     private $conn;
 
-
+    /* Connection com o banco */
     public function __construct(){
             
         $this->conn = new Conn;
         $this->conn = $this->conn->getConnection();
     }
 
+    /* Será o nosso metodo publico que ira receber a tabela e o termo */
     public function delete($table, $data){
         $this -> table = (string) $table;
         $this -> terms =  $data;
@@ -32,11 +34,13 @@ class Delete
         $this->setExe();
     }
 
+    /* Um metodo que retorna a quantidade de linhas apagadas */
     public function getRowCount()
     {
         return $this->sql->rowCount();
     }
 
+    /* Criamos nossa tabela */
     private function getSyn(){
         $this->sql = "DELETE FROM {$this->table} {$this->terms}";
     }
@@ -45,6 +49,7 @@ class Delete
     private function setExe(){
 
         try {
+            /* Preparamos a query e executamos */
             $this->sql = $this->conn->prepare($this->sql);
             $this->sql->execute();
             $this->result = True;

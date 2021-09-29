@@ -1,22 +1,28 @@
 <?php 
+/*Auto load para chamar o crud e o conn */ 
 require_once 'vendor/autoload.php';
 
-use App\Crud\read;
+use App\Crud\Read;
 
-
+/* Declarando e dando valores iniciais a duas variaveis que vai auxiliar na paginação do nosso aplicativo.
+    É declarado como com numero por que, as proximas requisições serão assincronas serão feitas no filter.php
+*/
 $filterObj = 10;
 $offset = 1;
 
-$query = new read();
+/* Instanciando um novo objeto Read */
+$query = new Read();
 
-// Aqui vamos usar o count para pegar todos os registros de times. usando na paginação
+// Aqui vamos usar o count para pegar todos os registros de times e usar para conseguir a quantidade de pagina total que vai ter nosso app
 $total = count($query -> read("tbtimefutebol","tbtimefutebol.id, tbtimefutebol.time,  tbestado.nome, tbestado.UF", "tbtimefutebol INNER JOIN tbestado ON tbtimefutebol.idtbestado = tbestado.id "));
 
-// Query para usar na tabela. Limite inicial de 10 (Padrao). 
+// Query para usar na tabela. Limite inicial de 10 (Padrao) e vai começar do 1 registro (Inicalmente como padrão até a paginação). 
 $oa = $query -> read("tbtimefutebol","tbtimefutebol.id, tbtimefutebol.time,  tbestado.nome, tbestado.UF", "tbtimefutebol INNER JOIN tbestado ON tbtimefutebol.idtbestado = tbestado.id LIMIT {$filterObj} OFFSET {$offset}");
 
+/* Usei o ceil para arredondar pra cima a divisão do total com o limite a cada pagina */
 $qntpag = ceil($total/($filterObj));
 
+/* Variavel auxiliar do contador do for */
 $limit = count($oa);
 
 include __DIR__.'/inc/header.php';
@@ -49,30 +55,34 @@ include __DIR__.'/inc/header.php';
                 </div>
             </form>  
         </div>
+        <!-- Incluindo o modal do arquivo add_times.php - Já vem de com uma consulta pra retornar os estaods disponiveis -->
         <?php include __DIR__.'/inc/add_times.php' ?>
         <div class="container filter_data">
+                
+        
                 <?php 
+                /* Nesse trecho do cogio ficou meio confuso mas, quando eu der qualquer requisição com ajax, a funçãp vai pegar o valor do open select e enviar junto com outros possiveis dados.
+                
+                Porque ?
+                    Porque quando eu paginar, o codigo nao ignorar a quantidade por pagina selecionada.
+                    Isso ocorre com a maioria ou todas as variaveis que mandadmos por post no js pelo ajax.
+                    assim nem um ignora o outro, e se algum desse nao tiver sido preenxido com dados (por exemplo o search) vai ter uma verificação dentro do filter.php
+
+                Se o $_POST['_filterObj'] tiver inicializado, então vai incluir o filter.php com o .html() do jquery e trabalhar com os dados enviados via post
+                */
                 if(isset($_POST['_filterObj'])){
                     include __DIR__.'/inc/filter.php';
+                }else{
                     
+                    
+                    /* O template que sera mostrado antes de ocorrer alguma requiseção com ajax*/ 
                     ?>
-                        <ul class="pagination">
-                        <li class="page-item disabled"><span class="page-link">Anterior</span></li>
-                        <?php for($i = 1; $i <= $qntpag; $i++){?>
-                            <li class="page-item"><a class="page-link" href="<?php echo $i ?>"><?php echo $i ?></a></li>
-                        <?php
-                        }?>
-                        <li class="page-item"><a class="page-link" href="#">Próximo</a></li>
-                    </ul>
-                </div>
-                <?php
-                }else{?>
                 <div class="container table_container">
                 <div class="row cabeçalho-content">
                     <div class="col" id='invert_seq'>Time de futebol <button class='add_or_delete'id="invert"value="ASC"><i class="bi bi-caret-up-fill"></i><i class="bi bi-caret-down-fill"></i></button> </div>
                     <div class="col">Estado</div>
                     <div class="col">UF</div>
-                    <div class="col"><button type="button" data-toggle="modal" class='add_or_delete' data-target="#exampleModal" data-whatever="Nome do time"><i style="color: #5aea5a;" class="fas fa-plus"></i></button></div>
+                    <div class="col"><button type="button" data-toggle="modal" class='add_or_delete' data-target="#exampleModal" data-whatever="Nome do time"><i style="color: rgb(0 155 65);" class="fas fa-plus"></i></button></div>
                 </div>
                 <?php
                     for($i = 0; $i < $limit; $i++){  

@@ -5,10 +5,11 @@ use App\Crud\read;
 
 $query = new read();
 
+/* Query retorna os estados para serem usados no slect option*/
 $oe = $query->read("tbestado", "nome, id");
 $qnt = count($oe)
 ?>
-
+<!-- modal do bootstrap -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -29,6 +30,7 @@ $qnt = count($oe)
             <select name='estado'class="form-select form-select-lg form-control mb-3" id='estado' aria-label=".form-select-lg example">
               <option value="default">Selecione um estado</option>
               <?php for ($i = 0; $i < $qnt; $i++) {
+                /* select option que vai mostrar os estados para o usuario criar um novo time, com um value e nome */
                 echo "<option value=" . $oe[$i]['id'] . "> " . $oe[$i]['nome'] . "</option>";
               } ?>
             </select>

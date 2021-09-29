@@ -2,7 +2,6 @@ $(document).ready(function () {
     var time = $('#recipient-name')
     var estado =  $('#estado')
     var bool_button = false
-
     $('#form1').on('submit',function(e) {
         e.preventDefault();
         filter_table = $('select[id=filter_table] option').filter(':selected').val()
